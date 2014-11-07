@@ -6,7 +6,8 @@ import com.mindrocks.monads.Monad;
 import tink.core.*;
 import tink.core.Noise;
 
-/** Monad instance for futures.
+/** Monad instance for continuations.
+  * These monad sequences functions that take callbacks as parameters.
 */
 class MonadContinuation {
   public static function monad<T>(f : Callback<T> -> Void) return MonadContinuation; // will help with syntactic Sugar (see below)
