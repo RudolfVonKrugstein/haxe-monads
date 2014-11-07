@@ -9,7 +9,8 @@ import tink.core.Noise;
 
 using tink.core.Outcome;
 
-/** Monad instance for surprises.
+/** Monad for Surprises. See MonadFuture. In difference to MonadFuture the next Future (Surprise) returning function is only
+  * run, when the last Surprise is not a Failure. It is assumed that all Failures are Strings!
 */
 class MonadSurprise {
   public static function monad<T>(f : Surprise<T, String>) return MonadSurprise; // will help with syntactic Sugar (see below)
