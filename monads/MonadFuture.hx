@@ -7,6 +7,14 @@ import tink.core.*;
 import tink.core.Noise;
 
 /** Monad instance for futures.
+  * The futures are sequenced. If they are created by functions, these functions are not executed before the
+  * last future triggerd. So:
+  * MonadFuture.dO({
+  *  func1();
+  *  func2();
+  * });
+  * Executes func1(), waits for the future (returned by func1) to trigger and then executes func2(). The
+  * whole construct returns a future that is triggered when the future returned by func2 is triggered.
 */
 class MonadFuture {
   public static function monad<T>(f : Future<T>) return MonadFuture; // will help with syntactic Sugar (see below)
