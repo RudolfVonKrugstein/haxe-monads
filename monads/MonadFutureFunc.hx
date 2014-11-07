@@ -7,6 +7,8 @@ import tink.core.*;
 import tink.core.Noise;
 
 /** Monad instance for future functions (functions returning futures).
+*   Very similar to MonadFuture, but with functions returning futures. I am not sure if this monad really has a
+*   purpose that could be fulliflled by MonadFuture.
 */
 class MonadFutureFunc {
   public static function monad<T>(f : Void -> Future<T>) return MonadFutureFunc; // will help with syntactic Sugar (see below)
