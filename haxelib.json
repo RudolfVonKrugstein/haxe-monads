@@ -1,0 +1,10 @@
+{
+    "name"         : "monads",
+    "tags"         : ["cross", "monads"],
+    "description"  : "A collection of monax based monads.",
+    "version"      : "1.0",
+    "contributors" : ["Nathan Hüsken"],
+    "dependencies" : {
+        "monax"       : ""
+    }
+}
