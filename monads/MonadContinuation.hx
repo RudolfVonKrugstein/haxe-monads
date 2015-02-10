@@ -37,9 +37,9 @@ class MonadContinuation {
     }
   }
 
-  public static function toCont<T>(s : Void -> Future<T>) : Callback<T> -> Void {
+  public static function toCont<T>(s : Future<T>) : Callback<T> -> Void {
     return function(cb) {
-      s().handle(function(t) {cb.invoke(t);});
+      s.handle(function(t) {cb.invoke(t);});
     }
   }
 

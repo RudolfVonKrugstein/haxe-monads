@@ -63,14 +63,14 @@ class MonadFuture {
     return resFuture.asFuture();
   }
 
-  public static function ofManyNoise(f : Array<Future<Noise>>) : Future<Noise> {
+  public static function ofManyNoise<T>(f : Array<Future<T>>) : Future<Noise> {
     var resFuture = Future.trigger();
     function iterate(index : Int) : Void {
       if (f.length <= index) {
         resFuture.trigger(Noise);
       } else {
         f[index].handle(
-          function(t) {
+          function(_) {
             iterate(index + 1);
             });
       }

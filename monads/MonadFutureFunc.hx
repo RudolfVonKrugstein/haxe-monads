@@ -70,7 +70,7 @@ class MonadFutureFunc {
     }
   }
 
-  public static function ofManyNoise(f : Array<Void -> Future<Noise>>) : Void -> Future<Noise> {
+  public static function ofManyNoise<T>(f : Array<Void -> Future<T>>) : Void -> Future<Noise> {
     return function() {
       var resFuture = Future.trigger();
       function iterate(index : Int) : Void {
@@ -78,7 +78,7 @@ class MonadFutureFunc {
           resFuture.trigger(Noise);
         } else {
           f[index]().handle(
-            function(t) {
+            function(_) {
               iterate(index + 1);
               });
         }
