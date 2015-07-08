@@ -13,24 +13,24 @@ using tink.core.Outcome;
   * run, when the last Surprise is not a Failure. It is assumed that all Failures are Strings!
 */
 class MonadSurprise {
-  public static function monad<T>(f : Surprise<T, String>) return MonadSurprise; // will help with syntactic Sugar (see below)
-    
+  public static function monad<T,F>(f : Surprise<T, F>) return MonadSurprise; // will help with syntactic Sugar (see below)
+
   macro public static function dO(body : Expr) return // the function to trigger the Monad macro.
     Monad._dO("monads.MonadSurprise", body, Context);
 
-  inline public static function ret<T>(x : T) : Surprise<T, String> {
+  inline public static function ret<T,F>(x : T) : Surprise<T, F> {
     var res = Future.trigger();
     res.trigger(Success(x));
     return res.asFuture();
   }
   
-  inline public static function map < T, U > (x : Surprise<T, String>, f : T -> U) : Surprise<U, String> {
+  inline public static function map < T, U, F > (x : Surprise<T, F>, f : T -> U) : Surprise<U, F> {
     return x.map(function(o) {
       return o.map(f);
       });
   }
 
-  inline public static function flatMap<T, U>(x : Surprise<T,String>, f : T -> (Surprise<U,String>)) : Surprise<U,String> {
+  inline public static function flatMap<T, U, F>(x : Surprise<T,F>, f : T -> (Surprise<U,F>)) : Surprise<U,F> {
     var resTrigger = Future.trigger();
     x.handle(function(t) {
       switch(t) {
@@ -43,11 +43,11 @@ class MonadSurprise {
     return resTrigger.asFuture();
   }
 
-  public static function toNoise<T>(f : Surprise<T,String>) : Surprise<Noise,String> {
+  public static function toNoise<T,F>(f : Surprise<T,F>) : Surprise<Noise,F> {
     return map(f, function(t) {return Noise;});
   }
 
-  public static function ofMany<T>(f : Array<Surprise<T, String>>) : Surprise<Array<T>, String> {
+  public static function ofMany<T,F>(f : Array<Surprise<T, F>>) : Surprise<Array<T>, F> {
     var resArray  = [];
     var resFuture = Future.trigger();
     function iterate(index : Int) : Void {
@@ -70,7 +70,7 @@ class MonadSurprise {
     return resFuture.asFuture();
   }
 
-  public static function ofManyNoise(f : Array<Surprise<Noise, String>>) : Surprise<Noise, String> {
+  public static function ofManyNoise<F>(f : Array<Surprise<Noise, F>>) : Surprise<Noise, F> {
     var resFuture = Future.trigger();
     function iterate(index : Int) : Void {
       if (f.length <= index) {
