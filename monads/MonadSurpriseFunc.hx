@@ -99,4 +99,33 @@ class MonadSurpriseFunc {
       return resSurprise.asFuture();
     }
   }
+
+  public static function ofManyNoiseAggregateErrors<F>(f : Array<Void -> Surprise<Noise,F>>, aggregate : F -> F -> F) : Void -> Surprise<Noise,F> {
+    return function() {
+      var res : F= null;
+      var resSurprise = Future.trigger();
+      function iterate(index : Int) : Void {
+        if (f.length <= index) {
+          if (res == null) {
+            resSurprise.trigger(Success(Noise));
+          } else {
+            resSurprise.trigger(Failure(res));
+          }
+        } else {
+          f[index]().handle(
+            function(r) {
+              switch(r) {
+                case Failure(s):
+                  if (res == null) res = s;
+                  else res = aggregate(res,s);
+                case Success(_):
+              }
+              iterate(index +1);
+            });
+        }
+      }
+      iterate(0);
+      return resSurprise.asFuture();
+    }
+  }
 }
