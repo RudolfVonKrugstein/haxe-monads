@@ -90,4 +90,8 @@ class MonadSurprise {
       iterate(0);
       return resFuture.asFuture();
     }
+
+  public static function guard<F>(stop : Bool, error : F) : Surprise<Noise,F> {
+    return Future.sync(if (stop) Failure(error); else Success(Noise));
+  }
 }
